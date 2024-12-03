@@ -1,10 +1,7 @@
 namespace AdventOfCode.Day02;
 
-public class Day02Tests
+public class Day02Tests(ITestOutputHelper output)
 {
-    private readonly ITestOutputHelper _output;
-    public Day02Tests(ITestOutputHelper output) => _output = output;
-
     [Fact]
     public void Step1WithExample() => new Day02Solver().ExecuteExample1("2");
 
@@ -12,10 +9,10 @@ public class Day02Tests
     public void Step2WithExample() => new Day02Solver().ExecuteExample2("4");
 
     [Fact]
-    public void Step1WithPuzzleInput() => _output.WriteLine(new Day02Solver().ExecutePuzzle1());
+    public void Step1WithPuzzleInput() => output.WriteLine(new Day02Solver().ExecutePuzzle1());
 
     [Fact]
-    public void Step2WithPuzzleInput() => _output.WriteLine(new Day02Solver().ExecutePuzzle2());
+    public void Step2WithPuzzleInput() => output.WriteLine(new Day02Solver().ExecutePuzzle2());
 }
 
 public class Day02Solver : SolverBase

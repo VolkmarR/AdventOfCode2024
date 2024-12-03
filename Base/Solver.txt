@@ -1,17 +1,15 @@
 ﻿namespace AdventOfCode.Day[Day];
 
-public class Day[Day]Tests
+public class Day[Day]Tests(ITestOutputHelper output)
 {
-    private readonly ITestOutputHelper _output;
-    public Day[Day]Tests(ITestOutputHelper output) => _output = output;
 
     [Fact] public void Step1WithExample() => new Day[Day]Solver().ExecuteExample1("??");
         
     [Fact] public void Step2WithExample() => new Day[Day]Solver().ExecuteExample2("??");
 
-    [Fact] public void Step1WithPuzzleInput() => _output.WriteLine(new Day[Day]Solver().ExecutePuzzle1());
+    [Fact] public void Step1WithPuzzleInput() => output.WriteLine(new Day[Day]Solver().ExecutePuzzle1());
         
-    [Fact] public void Step2WithPuzzleInput() => _output.WriteLine(new Day[Day]Solver().ExecutePuzzle2());
+    [Fact] public void Step2WithPuzzleInput() => output.WriteLine(new Day[Day]Solver().ExecutePuzzle2());
 }
 
 public class Day[Day]Solver : SolverBase

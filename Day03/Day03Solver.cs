@@ -2,11 +2,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Day03;
 
-public class Day03Tests
+public class Day03Tests(ITestOutputHelper output)
 {
-    private readonly ITestOutputHelper _output;
-    public Day03Tests(ITestOutputHelper output) => _output = output;
-
     [Fact]
     public void Step1WithExample() => new Day03Solver().ExecuteExample1("161");
 
@@ -14,10 +11,10 @@ public class Day03Tests
     public void Step2WithExample() => new Day03Solver().ExecuteExample2("48");
 
     [Fact]
-    public void Step1WithPuzzleInput() => _output.WriteLine(new Day03Solver().ExecutePuzzle1());
+    public void Step1WithPuzzleInput() => output.WriteLine(new Day03Solver().ExecutePuzzle1());
 
     [Fact]
-    public void Step2WithPuzzleInput() => _output.WriteLine(new Day03Solver().ExecutePuzzle2());
+    public void Step2WithPuzzleInput() => output.WriteLine(new Day03Solver().ExecutePuzzle2());
 }
 
 public class Day03Solver : SolverBase
@@ -32,7 +29,7 @@ public class Day03Solver : SolverBase
     protected override object Solve1()
     {
         var regex = new Regex(@"mul\((?'x'\d{1,3}),(?'y'\d{1,3})\)");
-        var result = 0l;
+        var result = 0L;
         foreach (var data in _data)
         {
             var matches = regex.Matches(data);
