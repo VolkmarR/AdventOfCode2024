@@ -30,70 +30,68 @@ public class Day10Solver : SolverBase
         {
             var line = data[y];
             for (var x = 0; x < _maxX; x++)
-                _data[x, y] = int.Parse(line[x].ToString());
+            {
+                if (line[x] == '.')
+                    _data[x, y] = -1;
+                else
+                    _data[x, y] = int.Parse(line[x].ToString());
+            }
         }
     }
 
-    private void Move(int lastHeight, int x, int y, HashSet<(int x, int y)> visited,
-        HashSet<(int x, int y)> visitedNine)
+    private void Move(int lastHeight, int x, int y, Dictionary<(int x, int y), int> visitedNine)
     {
-        if (x < 0 || x >= _maxX || y < 0 || y >= _maxY || _data[x, y] != lastHeight + 1 || visited.Contains((x, y)))
+        if (x < 0 || x >= _maxX || y < 0 || y >= _maxY || _data[x, y] != lastHeight + 1)
             return;
 
         var position = (x, y);
         var current = _data[x, y];
         if (current == 9)
         {
-            visitedNine.Add(position);
+            visitedNine.TryAdd(position, 0);
+            visitedNine[position]++;
             return;
         }
 
-        visited.Add(position);
-        Move(current, x + 1, y, visited, visitedNine);
-        Move(current, x - 1, y, visited, visitedNine);
-        Move(current, x, y + 1, visited, visitedNine);
-        Move(current, x, y - 1, visited, visitedNine);
+        Move(current, x + 1, y, visitedNine);
+        Move(current, x - 1, y, visitedNine);
+        Move(current, x, y + 1, visitedNine);
+        Move(current, x, y - 1, visitedNine);
     }
 
     protected override object Solve1()
     {
-        var dummy = 0;
         var count = 0;
-        var visited = new HashSet<(int x, int y)>();
-        var visitedNine = new HashSet<(int x, int y)>();
+        var visitedNine = new Dictionary<(int x, int y), int>();
         for (var y = 0; y < _maxY; y++)
         for (var x = 0; x < _maxX; x++)
         {
             if (_data[x, y] != 0)
                 continue;
-            
-            visited.Clear();
+
             visitedNine.Clear();
-            Move(-1, x, y, visited, visitedNine);
+            Move(-1, x, y, visitedNine);
             count += visitedNine.Count;
-        }   
-        
+        }
+
         return count;
     }
 
     protected override object Solve2()
     {
-        var dummy = 0;
         var count = 0;
-        var visited = new HashSet<(int x, int y)>();
-        var visitedNine = new HashSet<(int x, int y)>();
+        var visitedNine = new Dictionary<(int x, int y), int>();
         for (var y = 0; y < _maxY; y++)
         for (var x = 0; x < _maxX; x++)
         {
             if (_data[x, y] != 0)
                 continue;
-            
-            visited.Clear();
+
             visitedNine.Clear();
-            Move(-1, x, y, visited, visitedNine);
-            count += dummy;
-        }   
-        
+            Move(-1, x, y, visitedNine);
+            count += visitedNine.Sum(q => q.Value);
+        }
+
         return count;
     }
 }
