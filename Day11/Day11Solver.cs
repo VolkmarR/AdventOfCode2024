@@ -18,16 +18,22 @@ public class Day11Tests(ITestOutputHelper output)
 public class Day11Solver : SolverBase
 {
     long[] _data;
+    Dictionary<int, Dictionary<int, long>> _cache = new();
 
     protected override void Parse(List<string> data)
     {
         _data = data[0].Split(" ").Select(long.Parse).ToArray();
+        for (var i = 0; i <= 9; i++)
+            _cache.Add(i, new());
     }
 
-    private bool Split(long value, out long left, out long right)
+    private static bool Split(long value, out long left, out long right)
     {
         left = 0;
         right = 0;
+
+        if (value <= 9)
+            return false;
 
         var work = value;
         var length = 0;
@@ -40,55 +46,51 @@ public class Day11Solver : SolverBase
         if (length % 2 != 0)
             return false;
 
-        var asString = value.ToString();
-        left = long.Parse(asString[..(asString.Length / 2)]);
-        right = long.Parse(asString[(asString.Length / 2)..]);
+        var splitter = 1;
+        for (var i = 0; i < length / 2; i++)
+            splitter *= 10;
+
+        left = value / splitter;
+        right = value % splitter;
         return true;
     }
 
-    private void Blink(LinkedList<long> start)
+    private long BlinkFor(long item, int times)
     {
-        var current = start.First;
-        while (current != null)
-        {
-            if (current.Value == 0)
-                current.Value = 1;
-            else if (Split(current.Value, out var left, out var right))
-            {
-                start.AddBefore(current, new LinkedListNode<long>(left));
-                current.Value = right;
-            }
-            else
-                current.Value *= 2024;
+        if (times == 0)
+            return 1;
 
-            current = current.Next;
+        times--;
+        if (item < 10)
+        {
+            var cache = _cache[(int)item];
+            if (cache.TryGetValue(times, out var value))
+                return value;
+
+            var count = BlinkFor(item == 0 ? 1 : item * 2024, times);
+
+            cache.Add(times, count);
+            return count;
         }
+
+        if (Split(item, out var left, out var right))
+            return BlinkFor(left, times) + BlinkFor(right, times);
+
+        return BlinkFor(item * 2024, times);
     }
 
     private long BlinkFor(int times)
     {
-        var count = 0;
-        var itemAsList = new LinkedList<long>();
+        var sum = 0L;
         foreach (var item in _data)
-        {
-            itemAsList.Clear();
-            itemAsList.AddLast(new LinkedListNode<long>(item));
-            for (var i = 0; i < times; i++)
-                Blink(itemAsList);
-            count += itemAsList.Count;
-        }
+            sum += BlinkFor(item, times);
 
-        return count;
+        return sum;
     }
 
     protected override object Solve1()
-    {
-        return BlinkFor(25);
-    }
-
+        => BlinkFor(25);
 
     protected override object Solve2()
-    {
-        return BlinkFor(75);
-    }
+        => BlinkFor(75);
 }
