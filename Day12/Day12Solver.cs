@@ -97,7 +97,7 @@ public class Day12Solver : SolverBase
             _data[y, x] = data[y - 1][x - 1];
     }
 
-    void FloodFill(int x, int y, char value, HashSet<(int x, int y)>? perimeterDirection)
+    void FloodFill(int x, int y, char value, HashSet<(int x, int y)> perimeterDirection)
     {
         var position = (x, y);
         if (_area.Contains(position))
