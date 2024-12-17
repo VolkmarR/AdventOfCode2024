@@ -38,4 +38,27 @@ static class Extensions
 
         return new string(text.ToCharArray().Reverse().ToArray());
     }
+
+    public static int Pow(this int number, int exponent)
+    {
+        if (exponent == 0)
+            return 1;
+        var result = number;
+        for (var i = 1; i <= exponent; i++)
+            result *= number;
+        return result;
+    }
+    
+    public static long Pow(this long number, long exponent)
+    {
+        if (exponent == 0)
+            return 1;
+        if (exponent == 1)
+            return number;
+        
+        var result = number;
+        for (var i = 2; i <= exponent; i++)
+            result *= number;
+        return result;
+    }
 }
